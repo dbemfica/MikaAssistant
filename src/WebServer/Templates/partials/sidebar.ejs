@@ -1,0 +1,54 @@
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu" data-widget="tree">
+            <li class="header">MAIN MENU</li>
+
+            <!--dashboard-->
+            <% if( locals.path === '/' ){ %>
+            <li class="active"><a href="/"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+            <% }else{ %>
+            <li><a href="/"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+            <% } %>
+
+            <!--devices.js-->
+            <% if( locals.path === '/devices.js' ){ %>
+                <li class="active"><a href="/devices"><i class="fa fa-tablet"></i> <span>Devices</span></a></li>
+            <% }else{ %>
+                <li><a href="/devices"><i class="fa fa-tablet"></i> <span>Devices</span></a></li>
+            <% } %>
+
+            <!--Settings-->
+            <% if( locals.path === '/settings' || locals.path === '/settings/dialogflow' || locals.path === '/settings/hgweather' ){ %>
+                <li class="active treeview menu-open">
+            <% }else{ %>
+                <li class="treeview">
+            <% } %>
+                <a href="#">
+                    <i class="fa fa-cogs"></i> <span>Settings</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <% if( locals.path === '/settings/dialogflow' ){ %>
+                        <li class="active"><a href="/settings/dialogflow"><i class="fa fa-comment-o"></i> Dialogflow</a></li>
+                    <% }else{ %>
+                        <li><a href="/settings/dialogflow"><i class="fa fa-comment-o"></i> Dialogflow</a></li>
+                    <% } %>
+                    <% if( locals.path === '/settings/hgweather' ){ %>
+                        <li class="active"><a href="/settings/hgweather"><i class="fa fa-cloud"></i> Hg Weather</a></li>
+                    <% }else{ %>
+                        <li><a href="/settings/hgweather"><i class="fa fa-cloud"></i> Hg Weather</a></li>
+                    <% } %>
+                </ul>
+            </li>
+
+            <!--Settings-->
+            <li><a href="https://github.com" target="_blank"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

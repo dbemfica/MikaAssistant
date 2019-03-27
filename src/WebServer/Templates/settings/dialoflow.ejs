@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include ../partials/head %>
+    <title>Mika - Settings</title>
+</head>
+<body>
+</head>
+<body class="hold-transition skin-green sidebar-mini">
+<div class="wrapper">
+
+    <!-- Header -->
+    <% include ../partials/header %>
+
+    <!-- Sidebar -->
+    <% include ../partials/sidebar %>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Dialogflow
+                <small>Settings</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-cogs"></i> Settings</a></li>
+                <li class="active">Dialogflow</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-lg-12 col-xs-12">
+                    <div class="box box-success">
+                        <form action="/settings/dialogflow" method="post">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Client access token</label>
+                                            <input type="text" name="client_token" class="form-control" placeholder="8ee4991b9c354asdast454fg344371fecc" value="<%= dialogflow.client_token %>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o"></i>&nbsp;&nbsp;Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<% include ../partials/footer %>
+</body>
+</html>

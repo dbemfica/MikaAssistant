@@ -1,0 +1,16 @@
+{
+  "devices": [],
+  "brands": [
+    "Yeelight - Xiaomi"
+  ],
+  "settings": {
+    "dialogflow": {
+      "client_token": ""
+    },
+    "hgweather": {
+      "api_key": "",
+      "latitude": "",
+      "longitude": ""
+    }
+  }
+}

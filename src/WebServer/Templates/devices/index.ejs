@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include ../partials/head %>
+    <title>Devices</title>
+</head>
+<body>
+</head>
+<body class="hold-transition skin-green sidebar-mini">
+<div class="wrapper">
+
+    <!-- Header -->
+    <% include ../partials/header %>
+
+    <!-- Sidebar -->
+    <% include ../partials/sidebar %>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Devices
+                <small>List Devices</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-tablet"></i> Home</a></li>
+                <li class="active">Devices</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="box box-success">
+                <div class="box-header">
+                    <a href="/devices/form" class="btn btn-success"><i class="fa fa-tablet"></i>&nbsp;&nbsp;Add Device</a>
+                </div>
+            </div>
+            <div class="row">
+                <% for(var i=0; i< devices.length; i++) {%>
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i class="fa fa-tablet"></i></span>
+                        <div class="info-box-content">
+                            <div class="dropdown pull-right">
+                                <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-cogs"></i>&nbsp;<span class="caret"></span></button>
+                                <ul class="dropdown-menu" aria-labelledby="drop3">
+                                    <li>
+                                        <form id="form-remove-device<%= devices[i].id %>" action="/devices/delete" method="post" class="hidden">
+                                            <input type="hidden" name="id" value="<%= devices[i].id %>">
+                                        </form>
+                                        <a href="#" class="btn-turn-on" name="<%= devices[i].name %>" group="<%= devices[i].group %>"><i class="fa fa-lightbulb-o"></i>Turn on</a>
+                                        <a href="#" class="btn-turn-off" name="<%= devices[i].name %>" group="<%= devices[i].group %>"><i class="fa fa-lightbulb-o"></i>Turn off</a>
+                                        <a href="#" class="btn-change-color" data-toggle="modal" data-target="#modal-change-color" name="<%= devices[i].name %>" group="<%= devices[i].group %>"><i class="fa fa-tint"></i>Change color</a>
+                                        <a href="#" class="btn-change-brightness" data-toggle="modal" data-target="#modal-change-brightness" name="<%= devices[i].name %>" group="<%= devices[i].group %>"><i class="fa fa-sun-o"></i>Change brightness</a>
+                                        <a href="#" class="btn-remove-device" id="btn-remove-device<%= devices[i].id %>"><i class="fa fa-trash"></i>Remove Device</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <span class="info-box-text" style="font-weight: bold"><%= devices[i].name %></span>
+                            <span class="info-box-text" style="font-size: 12px;">BRAND: <%= devices[i].brand %></span>
+                            <span class="info-box-text" style="font-size: 12px;">ID: <%= devices[i].id %></span>
+                            <span class="info-box-text" style="font-size: 12px;">Address: <%= devices[i].address %></span>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </section>
+        <!-- Modal Change Color -->
+        <div class="modal fade" id="modal-change-color">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Change Color</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <ul style="list-style: none; margin: 0; padding: 0; overflow: auto">
+                            <% for(var k in colors) {%>
+                                <li style="width: 25%; float: left" class="text-center"><%= k %><div style="width: 30px; height: 30px; border: 1px solid #cccccc; background-color: #<%= colors[k].hex %>; margin: auto"></div><input class="modal-change-color-color" name="a" type="radio" value="<%= k %>"></li>
+                            <% } %>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn-change-color" type="submit" class="btn btn-success">Change color</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Change Brightness -->
+        <div class="modal fade" id="modal-change-brightness">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Change Brightness</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <input id="modal-change-brightness-range" type="range" min="1" max="100">
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn-change-brightness" type="submit" class="btn btn-success">Change brightness</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% include ../partials/main-footer.ejs %>
+</div>
+</div>
+<% include ../partials/footer %>
+<script>
+    $(document).ready(function(){
+        //btn-turn-on
+        $(".btn-turn-on").click(function(){
+            let name = $(this).attr('name');
+            let group = $(this).attr('group');
+
+            let request = {
+                source: 'smarthome',
+                target: 'core',
+                action: 'ligarDevice',
+                parameters: {
+                    device: name,
+                    group: group
+                }
+            }
+            socket.emit('core',request);
+        });
+
+        //btn-turn-off
+        $(".btn-turn-off").click(function(){
+            let name = $(this).attr('name');
+            let group = $(this).attr('group');
+
+            let request = {
+                source: 'smarthome',
+                target: 'core',
+                action: 'desligarDevice',
+                parameters: {
+                    device: name,
+                    group: group
+                }
+            }
+            socket.emit('core',request);
+        });
+
+        //btn-change-color
+        $(".btn-change-color").click(function(){
+            let name = $(this).attr('name');
+            let group = $(this).attr('group');
+            $("#btn-change-color").attr({"name":name}).attr({"group":group})
+        });
+        $("#btn-change-color").click(function(){
+            let name = $(this).attr('name');
+            let group = $(this).attr('group');
+            let color = $(".modal-change-color-color:checked").val()
+
+            let request = {
+                source: 'smarthome',
+                target: 'core',
+                action: 'trocarCorDevice',
+                parameters: {
+                    device: name,
+                    group: group,
+                    cor: color
+                }
+            }
+            socket.emit('core',request);
+            $('#modal-change-color').modal('hide');
+        });
+
+        //btn-change-color
+        $(".btn-change-brightness").click(function(){
+            let name = $(this).attr('name');
+            let group = $(this).attr('group');
+            $("#btn-change-brightness").attr({"name":name}).attr({"group":group})
+        });
+        $("#btn-change-brightness").click(function(){
+            let name = $(this).attr('name');
+            let group = $(this).attr('group');
+            let brightness = $("#modal-change-brightness-range").val()
+
+            let request = {
+                source: 'smarthome',
+                target: 'core',
+                action: 'changeBrightness',
+                parameters: {
+                    device: name,
+                    group: group,
+                    brightness: brightness
+                }
+            }
+            socket.emit('core',request);
+            $('#modal-change-brightness').modal('hide');
+        });
+
+        //btn-remove-devices
+        $(".btn-remove-device").click(function(){
+            let id = $(this).attr('id').replace(/[^0-9.]/g, "");
+            $("#form-remove-device"+id).submit();
+        })
+
+
+    })
+</script>
+</body>
+</html>

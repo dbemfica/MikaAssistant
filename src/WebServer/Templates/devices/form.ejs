@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include ../partials/head %>
+    <title>Device Form</title>
+</head>
+<body>
+</head>
+<body class="hold-transition skin-green sidebar-mini">
+<div class="wrapper">
+
+    <!-- Header -->
+    <% include ../partials/header %>
+
+    <!-- Sidebar -->
+    <% include ../partials/sidebar %>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Devices
+                <small>Add Device</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-tablet"></i> Home</a></li>
+                <li class="active">Devices</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-lg-12 col-xs-12">
+                    <div class="box box-success">
+                        <form action="/devices/create" method="post">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Brand</label>
+                                            <select name="brand" class="form-control select2">
+                                                <% for(var i=0; i< brands.length; i++) {%>
+                                                    <option value="<%= brands[i] %>"><%= brands[i] %></option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>ID</label>
+                                            <input type="text" name="id" class="form-control" placeholder="as4d5asd4a245sd">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Name</label>
+                                            <input type="text" id="name" name="name" class="form-control" placeholder="lampada do quarto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label>Address</label>
+                                            <input type="text" id="address" name="address" class="form-control" placeholder="192.168.1.1">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Port</label>
+                                            <input type="text" id="port" name="port" class="form-control" placeholder="554422">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Device</label>
+                                            <input type="text" id="device" name="device" class="form-control" placeholder="lampada">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>group</label>
+                                            <input type="text" id="group" name="group" class="form-control" placeholder="quarto">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o"></i>&nbsp;&nbsp;Save Changes</button>
+                                <button type="button" id="btn-procurar-devices" data-toggle="modal" data-target="#modal-scan" class="btn btn-default pull-right"><i class="fa fa-search"></i>&nbsp;&nbsp;Find Devices</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Modal -->
+        <div class="modal fade" id="modal-scan">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Find Devices</h4>
+                    </div>
+                    <div class="modal-body">
+                        <center id="loading"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i><br>Searching...</center>
+                        <table id="table_device" class="table table-bordered table-striped" style="display: none;">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Address</th>
+                                <th>Port</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn_select_device" type="submit" class="btn btn-success">Use this Devices</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% include ../partials/main-footer.ejs %>
+</div>
+</div>
+<% include ../partials/footer %>
+<script>
+    $(document).ready(function(){
+        let body = null;
+
+        $("#btn-procurar-devices").click(function(){
+            let table = $("#table_device");
+            table.find('tbody').empty();
+            table.hide();
+            $("#loading").show();
+            let request = {
+                source: 'smarthome',
+                target: 'core',
+                action: 'scannerDevice',
+                parameters: {}
+            }
+            socket.emit('core',request);
+
+            socket.on('smarthome',function(response){
+                let table = $("#table_device");
+                $("#loading").hide();
+                body = response.body;
+                for(let i = 0; i < body.length; i++){
+                    let html = '<tr><td>'+body[i].id+'</td><td>'+body[i].address+'</td><td>'+body[i].port+'</td><td><input name="device" class="input_deivces" type="radio" value="'+i+'"></td></tr>';
+                    table.find('tbody').append(html);
+                }
+                table.show();
+            });
+        });
+
+
+        $("body").on("click","#btn_select_device",function(){
+            let i = $(".input_deivces:checked").val();
+            $("input[name='id']").val(body[i].id)
+            $("input[name='address']").val(body[i].address)
+            $("input[name='port']").val(body[i].port)
+            $('#modal-scan').modal('hide');
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+.flash-messages{
+    position: absolute;
+    right: 1%;
+    width: 86%;
+    overflow: visible;
+    -webkit-animation-duration: .2s;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-name: fadeOut;
+    animation-duration: .2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1;
+    animation-name: fadeOut;
+    top: 10%;
+    z-index: 2;
+}
+@-webkit-keyframes fadeOut {
+    0% {
+      top:0;
+    }
+    100% {
+        top: 10%;
+    }
+}
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}
+.dropdown-submenu .dropdown-menu-right {
+    top: 0;
+    left: -100%;
+    right: 100%;
+    margin-top: -1px;
+}
